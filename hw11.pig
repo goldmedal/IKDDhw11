@@ -1,9 +1,9 @@
-register 'udf.py' using jython as myfuncs;
+REGISTER 'udf.py' USING jython AS myfuncs;
 
-a = LOAD 'dblp.json' as (works:chararray);
-b = foreach a generate flatten(TOKENIZE(myfuncs.first_split(works),',')) as word;
-c = group b by word;
-d = foreach c generate COUNT(b), group;
-e = order d by $0 DESC;
-f = limit e 100;
-store f into 'answer';
+data = LOAD '$input' AS (works:chararray);
+author = FOREACH data GENERATE flatten(TOKENIZE(myfuncs.first_split(works),',')) AS word;
+a_list = GROUP author BY word;
+a_count = FOREACH a_list GENERATE COUNT(author), group;
+a_order_list = ORDER a_count BY $0 DESC;
+result = LIMIT a_order_list 100;
+STORE result INTO '$output';

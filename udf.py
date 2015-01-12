@@ -19,9 +19,4 @@ def first_split(word):
     else :
         return
 
-@outputSchema("id:int")
-def auto_increment_id():
-    global COUNT
-    COUNT += 1
-    return COUNT
 
